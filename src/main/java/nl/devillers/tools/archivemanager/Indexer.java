@@ -3,6 +3,8 @@ package nl.devillers.tools.archivemanager;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import nl.devillers.tools.archivemanager.model.Archive;
+import nl.devillers.tools.archivemanager.model.FileSummary;
 import org.nustaq.serialization.FSTConfiguration;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +22,7 @@ public class Indexer {
     private static final FSTConfiguration fst = FSTConfiguration.createDefaultConfiguration();
 
     @SneakyThrows
-    public Map<Long, List<FileSummary>> readIndex(Config.Archive archive) {
+    public Map<Long, List<FileSummary>> readIndex(Archive archive) {
         if(!archive.isIndexed()) createIndex(archive);
         Map<Long, List<FileSummary>> index = (HashMap<Long, List<FileSummary>>)fst.asObject(Files.readAllBytes(archive.getIndex()));
         log.info("Read {} entries from {}", index.size(), archive.getIndex());
@@ -28,7 +30,7 @@ public class Indexer {
     }
 
     @SneakyThrows
-    public void createIndex(Config.Archive archive)  {
+    public void createIndex(Archive archive)  {
         log.info("Indexing {}", archive.getRoot());
         IndexingFileVisitor visitor = new IndexingFileVisitor();
         Files.walkFileTree(archive.getRoot(), visitor);

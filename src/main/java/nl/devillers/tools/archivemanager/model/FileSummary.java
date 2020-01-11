@@ -1,4 +1,4 @@
-package nl.devillers.tools.archivemanager;
+package nl.devillers.tools.archivemanager.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
