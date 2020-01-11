@@ -23,10 +23,7 @@ public class Fingerprinter {
             if(file.length() > CHUNK_SIZE * 2) {
                 content = new byte[2 * CHUNK_SIZE];
                 RandomAccessFile raf = new RandomAccessFile(file, "r");
-                //raf.seek(0);
                 raf.read(content, 0, CHUNK_SIZE);
-                //raf.seek(file.length() / 2);
-                //raf.read(content, CHUNK_SIZE, CHUNK_SIZE);
                 raf.seek(file.length() - CHUNK_SIZE);
                 raf.read(content, CHUNK_SIZE, CHUNK_SIZE);
                 raf.close();
@@ -36,7 +33,6 @@ public class Fingerprinter {
         } catch (IOException e) {
             log.warn(String.format("Failed to fingerprint file: %s", path), e);
             return Optional.empty();
-            //throw new RuntimeException(String.format("Failed to fingerprint file: %s", path), e);
         }
         return Optional.of(DigestUtils.sha1Hex(content));
     }

@@ -1,10 +1,9 @@
 package nl.devillers.tools.archivemanager;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nl.devillers.tools.archivemanager.model.Config;
 import nl.devillers.tools.archivemanager.model.FileSummary;
-import org.nustaq.serialization.FSTConfiguration;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,21 +19,12 @@ import java.util.stream.Collectors;
 
 @SpringBootApplication
 @Slf4j
+@AllArgsConstructor
 public class ArchiveManagerApplication implements CommandLineRunner {
 
-	private static final int CHUNK_SIZE = 1024;
-	private static final FSTConfiguration fst = FSTConfiguration.createDefaultConfiguration();
-
-	@Autowired
 	private Config config;
-
-	@Autowired
 	private Indexer indexer;
-
-	@Autowired
 	private Mappers mappers;
-
-	@Autowired
 	private Filters filters;
 
 	@Override

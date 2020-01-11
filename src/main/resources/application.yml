@@ -1,15 +1,15 @@
 Config:
   Sources:
-#    - Root: F:\Backup\Bigfoot_full
-#      Index: bigfoot-full-2.fst
-#    - Root: F:\Backup\CoolSwag_full_c
-#      Index: coolswag-c-full-2.fst
-#    - Root: F:\Backup\CoolSwag_full_d
-#      Index: coolswag-d-full-2.fst
-#    - Root: F:\Backup\Maxtor_full
-#      Index: maxtor-full-2.fst
-#    - Root: F:\Backup\Quanttum_full
-#      Index: quanttum-full-2.fst
+    - Root: F:\Backup\Bigfoot_full
+      Index: bigfoot-full-2.fst
+    - Root: F:\Backup\CoolSwag_full_c
+      Index: coolswag-c-full-2.fst
+    - Root: F:\Backup\CoolSwag_full_d
+      Index: coolswag-d-full-2.fst
+    - Root: F:\Backup\Maxtor_full
+      Index: maxtor-full-2.fst
+    - Root: F:\Backup\Quanttum_full
+      Index: quanttum-full-2.fst
     - Root: C:\
       Index: c-full.fst
     - Root: D:\
@@ -22,7 +22,7 @@ Config:
   IgnoreEmptyFiles: true
   RegexFilters:
     - (?i)\\(100_|Photo-|PIC_|DSC.|AAAA|PHOTO|DCM|P|IMG_|PHTO|CIMG|PA|PB)[0-9]+\.(jpg|mov|mp4|avi|arw)$
-    - (?i)\\[0-9]{4}-[0-9]{2}-[0-9]{2}.*\.(jpg|mov|mp4|avi|arw|mpg)$
-    - (?i)\\.+\.(psd|fla|as3|docx|doc|xls|xlsx|rtf|sln|wps|wks|ppt|pptx|vsd|flp|eap|3gp|csv|pdn|sql|ai|ics|pps|wmf|7z)$
+    #- (?i)\\[0-9]{4}-[0-9]{2}-[0-9]{2}.*\.(jpg|mov|mp4|avi|arw|mpg)$
+    #- (?i)\\.+\.(psd|fla|as3|docx|doc|xls|xlsx|rtf|sln|wps|wks|ppt|pptx|vsd|flp|eap|3gp|csv|pdn|sql|ai|ics|pps|wmf|7z)$
     #- (?i)\\.+\.(psd|fla|as3|java|cs|csproj|c|cpp|js|config|yml|yaml|tex|docx|doc|xls|xlsx|rtf|sln|wps|wks|wsdl|aspx|asp|xsl|ppt|pptx|vsd|flp|eap|3gp|csv|pdn|php|sql|ai|ics|pps|wmf|7z)$
     #- (?i)(bums|jeroen|koen|martin|jean|tom|tim|alex|frank|rudy|aia|infosupport|ovum|studie|werk|vakantie|bbq|thuis|ouders|familie|infantry)

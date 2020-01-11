@@ -4,9 +4,9 @@ import com.drew.imaging.FileType;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifIFD0Directory;
+import lombok.AllArgsConstructor;
 import nl.devillers.tools.archivemanager.model.Config;
 import nl.devillers.tools.archivemanager.model.FileSummary;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -18,9 +18,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
+@AllArgsConstructor
 public class Filters {
 
-    @Autowired
     Config config;
 
     public void applyFilters(Map<Long, List<FileSummary>> index) {
