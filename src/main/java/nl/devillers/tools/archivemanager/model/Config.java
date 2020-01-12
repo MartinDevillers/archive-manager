@@ -16,4 +16,5 @@ public class Config {
     private Archive target;
     private List<Pattern> regexFilters = new ArrayList<>();
     private Boolean ignoreEmptyFiles;
+    private ExifFilter exifFilter;
 }

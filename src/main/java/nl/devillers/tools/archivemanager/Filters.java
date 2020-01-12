@@ -5,6 +5,8 @@ import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import nl.devillers.tools.archivemanager.model.Config;
 import nl.devillers.tools.archivemanager.model.FileSummary;
 import org.springframework.stereotype.Component;
@@ -19,9 +21,10 @@ import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
+@Slf4j
 public class Filters {
 
-    Config config;
+    @NonNull Config config;
 
     public void applyFilters(Map<Long, List<FileSummary>> index) {
         if(config.getIgnoreEmptyFiles()) {
@@ -35,22 +38,16 @@ public class Filters {
     }
 
     public void applyExifFilter(Map<Long, List<FileSummary>> index) {
+
         index.values().forEach(x -> x.removeIf(y -> !exifFilter(y)));
     }
 
     private Boolean exifFilter(FileSummary file) {
-        //List<String> exifFileTypes = Arrays.asList("jpg");
-        //List<String> exifFileTypes = Arrays.asList("jpg", "png", "gif", "jpeg", "mp4", "m4a", "m4p", "m4b", "m4r", "m4v", "mov", "qt", "pcx", "ico", "bmp", "avi", "webp", "psd", "wav", "xmp", "tiff", "tif");
-        List<String> exifFileTypes = EnumSet.allOf(FileType.class)
-                .stream()
-                .map(FileType::getAllExtensions)
-                .flatMap(Arrays::stream)
-                .collect(Collectors.toList());
-
-        if(extensionFilter(file, exifFileTypes)) {
+        if(isExifSupportedFileType(file)) {
             try {
                 Metadata metadata = ImageMetadataReader.readMetadata(new File(file.getPath()));
-                return metadata.containsDirectoryOfType(ExifIFD0Directory.class) && metadata.getFirstDirectoryOfType(ExifIFD0Directory.class).containsTag(ExifIFD0Directory.TAG_MAKE);
+                ExifIFD0Directory directory = metadata.getFirstDirectoryOfType(ExifIFD0Directory.class);
+                return directory != null && (directory.containsTag(ExifIFD0Directory.TAG_MAKE) || directory.containsTag(ExifIFD0Directory.TAG_MODEL));
                 //return metadata.containsDirectoryOfType(ExifIFD0Directory.class) || metadata.containsDirectoryOfType(ExifSubIFDDirectory.class);
             } catch (Exception e) {
                 //log.warn("Error reading EXIF data", e);
@@ -59,7 +56,19 @@ public class Filters {
         return false;
     }
 
-    private Boolean extensionFilter(FileSummary file, List<String> extensions) {
-        return extensions.stream().anyMatch(x -> StringUtils.endsWithIgnoreCase(file.getPath(), ".".concat(x)));
+    private Boolean isExifSupportedFileType(FileSummary file) {
+        return getConfiguredExifExtensions().stream().anyMatch(x -> StringUtils.endsWithIgnoreCase(file.getPath(), ".".concat(x)));
+    }
+
+    private List<String> getConfiguredExifExtensions() {
+        Boolean allExtensions = config.getExifFilter().getExtensions().stream().anyMatch(x -> "*".equals(x));
+        if(allExtensions) {
+            return EnumSet.allOf(FileType.class)
+                    .stream()
+                    .map(FileType::getAllExtensions)
+                    .flatMap(Arrays::stream)
+                    .collect(Collectors.toList());
+        }
+        return config.getExifFilter().getExtensions();
     }
 }

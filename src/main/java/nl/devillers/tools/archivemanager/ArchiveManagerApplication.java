@@ -44,8 +44,10 @@ public class ArchiveManagerApplication implements CommandLineRunner {
 
 		// Apply filters
 		filters.applyFilters(sources);
-		//applyFilter2(sources);
 		filters.applyFilters(target);
+		if(config.getExifFilter().getEnabled()) {
+			filters.applyExifFilter(sources);
+		}
 
 		// Calculate missing files
 		List<FileSummary> missing = mappers.rightWithoutLeft(target, sources);
