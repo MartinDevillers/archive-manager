@@ -28,5 +28,5 @@ Config:
     #- (?i)(bums|jeroen|koen|martin|jean|tom|tim|alex|frank|rudy|aia|infosupport|ovum|studie|werk|vakantie|bbq|thuis|ouders|familie|infantry)
     - (?i)\\.+\.(jpg|jpeg|jpe)$
   ExifFilter:
-    Enabled: true
+    Enabled: false
     Extensions: jpg,jpeg,jpe

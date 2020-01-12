@@ -52,20 +52,14 @@ public class ArchiveManagerApplication implements CommandLineRunner {
 		// Calculate missing files
 		List<FileSummary> missing = mappers.rightWithoutLeft(target, sources);
 		log.info("Missing {} of {} files", missing.size(), sourcesFilesCount);
-		Path output =  Paths.get(String.format("missing-%s.txt", Instant.now().toEpochMilli()));
-		persistPaths(output, missing);
+		Path missingOutput =  Paths.get(String.format("missing-%s.txt", Instant.now().toEpochMilli()));
+		persistPaths(missingOutput, missing);
 
 		// Detect duplicates
-
-		/*
-		Set<Map.Entry<String, List<FileSummary>>> duplicates = index.entrySet()
-				.stream()
-				.filter(x -> x.getKey() > 1024 * 1024 && x.getValue().size() > 1)
-				.flatMap(x -> duplicates(x.getValue()).entrySet().stream())
-				.collect(Collectors.toSet());
-				//.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-		log.info("Found {} possible duplicates", duplicates.size());
-		 */
+		List<List<FileSummary>> duplicates = mappers.duplicates(target);
+		log.info("Found {} duplicates", duplicates.size());
+		Path duplicatesOutput =  Paths.get(String.format("duplicates-%s.txt", Instant.now().toEpochMilli()));
+		persistNestedPaths(duplicatesOutput, duplicates);
 	}
 
 	private void persistPaths(Path outputFile, List<FileSummary> files) throws IOException {
@@ -73,23 +67,13 @@ public class ArchiveManagerApplication implements CommandLineRunner {
 		Files.write(outputFile, paths, StandardOpenOption.CREATE_NEW);
 	}
 
-	private void detectDuplicates(Map<Long, List<FileSummary>> index) {
-		List<Map.Entry<String, List<FileSummary>>> duplicates = index.entrySet()
-				.stream()
-				.filter(x -> x.getValue().size() > 1)
-				.flatMap(x -> duplicates(x.getValue()).entrySet().stream())
-				.filter(x -> x.getValue().size() > 1)
+	private void persistNestedPaths(Path outputFile, List<List<FileSummary>> files) throws IOException {
+		List<String> lines = files.stream()
+				.map(x -> ">".concat(x.stream()
+						.map(FileSummary::getPath)
+						.collect(Collectors.joining(System.lineSeparator().concat(" ")))))
 				.collect(Collectors.toList());
-		log.info("Found {} duplicates", duplicates.size());
-	}
-
-	private Map<String, List<FileSummary>> duplicates(List<FileSummary> summaries) {
-		Map<String, List<FileSummary>> fingerprintedIndex = new HashMap<>();
-		for (FileSummary summary : summaries) {
-			List<FileSummary> bucket = fingerprintedIndex.computeIfAbsent(summary.getFingerprint(), x -> new ArrayList<>());
-			bucket.add(summary);
-		}
-		return fingerprintedIndex;
+		Files.write(outputFile, lines, StandardOpenOption.CREATE_NEW);
 	}
 
 	public static void main(String[] args) {
